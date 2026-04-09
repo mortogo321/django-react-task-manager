@@ -1,0 +1,35 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+.venv
+venv
+env
+
+# tests + dev artifacts that shouldn't ship in the runtime image
+**/tests.py
+**/test_*.py
+.git
+.gitignore
+# Local .env (machine-specific) is not shipped — the per-environment
+# .env.dev / .env.uat / .env.prod files ARE included so the Dockerfile
+# can pick the right one via `cp .env.${APP_ENV} .env` at build time.
+.env
+
+# editor cruft
+.vscode
+.idea
+*.swp
+.DS_Store
+
+# project docs (kept in the repo, not in the image)
+docs
+README.md
+*.md

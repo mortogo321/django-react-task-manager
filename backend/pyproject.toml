@@ -1,0 +1,86 @@
+[project]
+name = "baantask-backend"
+version = "0.2.0"
+description = "AI-powered household staff management platform — backend"
+requires-python = ">=3.12"
+
+# ----------------------------------------------------------------------------
+# Ruff — single tool for lint + format + import sort.
+#   Run:
+#     ruff check .            # report
+#     ruff check --fix .      # auto-fix
+#     ruff format .           # format (replaces black)
+# ----------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = [
+    "migrations",
+    "staticfiles",
+    "build",
+    "dist",
+    ".venv",
+]
+
+[tool.ruff.lint]
+# Curated rule set — practical, not pedantic.
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort
+    "B",     # flake8-bugbear
+    "C4",    # flake8-comprehensions
+    "DJ",    # flake8-django
+    "UP",    # pyupgrade
+    "SIM",   # flake8-simplify
+    "RUF",   # ruff-specific
+    "PL",    # pylint subset
+    "S",     # flake8-bandit (security)
+]
+ignore = [
+    "E501",   # line length is enforced by the formatter, not the linter
+    "PLR2004", # magic numbers — too noisy on Django code
+    "PLR0913", # too many arguments — Django views legitimately have many
+    "S101",   # assert is fine in pytest
+    "S105",   # hardcoded password strings — false positives in dev defaults
+    "S106",   # hardcoded password func args — same reason
+    "B008",   # do not perform function call in argument defaults — Django/DRF idiom
+    "RUF012", # mutable class attrs — Django Meta classes are intentional
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests.py"          = ["S", "PLR2004", "PLR0915"]
+"**/test_*.py"         = ["S", "PLR2004", "PLR0915"]
+"conftest.py"          = ["S"]
+"**/migrations/*.py"   = ["E", "F", "I", "N", "RUF"]
+"baantask/settings.py" = ["S105", "S106", "PLR0915"]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "baantask",
+    "core",
+    "tasks",
+    "workers",
+    "translation",
+    "notifications",
+]
+combine-as-imports = true
+force-sort-within-sections = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+
+# ----------------------------------------------------------------------------
+# Pytest
+# ----------------------------------------------------------------------------
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "baantask.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+addopts = "--reuse-db -ra"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]

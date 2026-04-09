@@ -1,0 +1,99 @@
+version: '3.8'
+
+# Dev compose. Mounts source for hot-reload, runs Django runserver and
+# the React dev server. For production builds use:
+#
+#     docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
+#
+# (see docker-compose.prod.yml — gunicorn, nginx, no source mounts).
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: baantask
+      POSTGRES_USER: baantask
+      POSTGRES_PASSWORD: baantask_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U baantask"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      target: dev
+      additional_contexts:
+        infra: ./docker/backend
+      args:
+        APP_ENV: dev
+    # `start.sh` (the ENTRYPOINT) handles makemigrations, migrate,
+    # collectstatic and seed_data when DEBUG=True / SEED_DATA=1; we
+    # only override the CMD here so the dev autoreload server runs.
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - ./backend:/app
+    user: "0:0"  # bind-mount needs root to write back to host
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - DJANGO_SECRET_KEY=django-insecure-dev-only
+      - POSTGRES_DB=baantask
+      - POSTGRES_USER=baantask
+      - POSTGRES_PASSWORD=baantask_dev
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8000/api/health/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      target: dev  # CRA dev server with hot reload
+      additional_contexts:
+        infra: ./docker/frontend
+        nginx: ./docker/nginx
+      args:
+        APP_ENV: dev
+    command: ["bun", "run", "start"]
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000/api
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

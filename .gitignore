@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+db.sqlite3
+staticfiles/
+
+# Local .env (machine-specific). The per-environment files
+# .env.dev / .env.uat / .env.prod under backend/ and frontend/ ARE
+# tracked — the Dockerfile copies the right one to .env at build time.
+.env
+backend/.env
+frontend/.env
+
+# Node
+node_modules/
+frontend/build/
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+postgres_data/
+
+# OS
+.DS_Store
+Thumbs.db

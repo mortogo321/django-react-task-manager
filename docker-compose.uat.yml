@@ -1,0 +1,130 @@
+# UAT (staging) overlay. Usage:
+#
+#     docker compose -f docker-compose.yml -f docker-compose.uat.yml up --build -d
+#
+# UAT mirrors production: gunicorn, nginx, no source bind-mounts,
+# unprivileged users, restart policies. Differences from prod:
+#   - APP_ENV defaults to `uat`, so the build bakes backend/.env.uat
+#     and frontend/.env.uat into the images.
+#   - Smaller HSTS window (1 hour) so cert/host swaps don't pin clients.
+#   - Slightly relaxed throttle defaults so QA test runs aren't limited.
+#   - Image tags default to a `:uat` channel separate from `:prod`.
+#
+# Required CI variables (fail-fast via `${VAR:?...}`):
+#   DJANGO_SECRET_KEY, ALLOWED_HOSTS, CORS_ALLOWED_ORIGINS,
+#   POSTGRES_PASSWORD
+
+services:
+  db:
+    ports: []
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-baantask_uat}
+      POSTGRES_USER: ${POSTGRES_USER:-baantask}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+    restart: unless-stopped
+    volumes:
+      - postgres_data_uat:/var/lib/postgresql/data
+
+  redis:
+    ports: []
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      target: runtime
+      additional_contexts:
+        infra: ./docker/backend
+      args:
+        APP_ENV: ${APP_ENV:-uat}
+    image: ${BACKEND_IMAGE:-baantask/backend:uat}
+    command: >
+      gunicorn baantask.wsgi:application
+      --bind 0.0.0.0:8000
+      --workers ${GUNICORN_WORKERS:-2}
+      --threads ${GUNICORN_THREADS:-4}
+      --timeout ${GUNICORN_TIMEOUT:-30}
+      --graceful-timeout 30
+      --max-requests ${GUNICORN_MAX_REQUESTS:-1000}
+      --max-requests-jitter 100
+      --access-logfile - --error-logfile -
+    volumes: []
+    user: "1001:1001"
+    environment:
+      DEBUG: "False"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY must be set}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:?ALLOWED_HOSTS must be set}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:?CORS_ALLOWED_ORIGINS must be set}
+      POSTGRES_DB: ${POSTGRES_DB:-baantask_uat}
+      POSTGRES_USER: ${POSTGRES_USER:-baantask}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      DB_CONN_MAX_AGE: ${DB_CONN_MAX_AGE:-60}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      THROTTLE_ANON: ${THROTTLE_ANON:-120/min}
+      THROTTLE_EMPLOYER: ${THROTTLE_EMPLOYER:-1200/min}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      TRANSLATION_MODEL: ${TRANSLATION_MODEL:-claude-haiku-4-5-20251001}
+      TRANSLATION_CACHE_TTL: ${TRANSLATION_CACHE_TTL:-604800}
+      TRANSLATION_TIMEOUT: ${TRANSLATION_TIMEOUT:-10}
+      SECURE_SSL_REDIRECT: ${SECURE_SSL_REDIRECT:-True}
+      SECURE_HSTS_SECONDS: ${SECURE_HSTS_SECONDS:-3600}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  migrate:
+    build:
+      context: ./backend
+      target: runtime
+      additional_contexts:
+        infra: ./docker/backend
+      args:
+        APP_ENV: ${APP_ENV:-uat}
+    image: ${BACKEND_IMAGE:-baantask/backend:uat}
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput"
+    user: "1001:1001"
+    environment:
+      DEBUG: "False"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY must be set}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:?ALLOWED_HOSTS must be set}
+      POSTGRES_DB: ${POSTGRES_DB:-baantask_uat}
+      POSTGRES_USER: ${POSTGRES_USER:-baantask}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  frontend:
+    build:
+      context: ./frontend
+      target: runtime
+      additional_contexts:
+        infra: ./docker/frontend
+        nginx: ./docker/nginx
+      args:
+        APP_ENV: ${APP_ENV:-uat}
+        REACT_APP_API_URL: ${REACT_APP_API_URL:-https://uat.baantask.app/api}
+    image: ${FRONTEND_IMAGE:-baantask/frontend:uat}
+    command: ["nginx", "-g", "daemon off;"]
+    volumes: []
+    ports:
+      - "${FRONTEND_PORT:-8081}:8080"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data_uat:
