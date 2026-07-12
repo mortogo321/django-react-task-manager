@@ -1,5 +1,5 @@
 """
-Permission classes for BaanTask.
+Permission classes for Task Manager.
 
 Auth lives in `core.middleware.SimpleAuthMiddleware` (dev-only header
 auth). `IsAuthenticatedEmployer` is the global default — it requires

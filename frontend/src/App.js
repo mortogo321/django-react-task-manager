@@ -55,7 +55,7 @@ export default function App() {
       <header className="header">
         <div className="header__brand">
           <span style={{ fontSize: 26 }}>🏠</span>
-          <h1>BaanTask</h1>
+          <h1>Task Manager</h1>
           <span className="header__tagline">AI Household Management</span>
         </div>
         <div className="header__right">
@@ -100,7 +100,7 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        BaanTask v0.2.0 · Test build
+        Task Manager v0.2.0 · Test build
       </footer>
     </div>
   );

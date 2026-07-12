@@ -1,5 +1,5 @@
 /**
- * API client for BaanTask backend.
+ * API client for Task Manager backend.
  * Base URL is proxied through package.json "proxy" in dev,
  * or set via REACT_APP_API_URL environment variable.
  */
@@ -11,7 +11,7 @@ const API_BASE = process.env.REACT_APP_API_URL || '/api';
 // Dev-only header auth: matches backend SimpleAuthMiddleware.
 // Persist the picked employer in localStorage so the user doesn't lose
 // context on reload.
-const STORAGE_KEY = 'baantask.employerId';
+const STORAGE_KEY = 'task-manager.employerId';
 export const getEmployerId = () => localStorage.getItem(STORAGE_KEY) || '1';
 export const setEmployerId = (id) => {
   if (id) {

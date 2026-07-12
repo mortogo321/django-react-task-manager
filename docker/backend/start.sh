@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 #
-# BaanTask backend entrypoint.
+# Task Manager backend entrypoint.
 #
 # Runs at container start. Bootstraps anything the app needs before
 # the main process takes over (gunicorn, runserver, pytest, …) and

@@ -26,7 +26,7 @@ class HealthCheckView(APIView):
                 "status": status,
                 "database": "ok" if db_ok else "error",
                 "cache": "ok" if cache_ok else "error",
-                "service": "BaanTask API",
+                "service": "Task Manager API",
                 "version": "0.2.0",
             },
             status=http_status,

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 #
-# BaanTask frontend — multi-stage build (bun).
+# Task Manager frontend — multi-stage build (bun).
 #
 # Stages:
 #   1. deps    — installs node_modules with `bun install` + cache mount

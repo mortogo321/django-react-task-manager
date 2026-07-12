@@ -1,4 +1,4 @@
-"""Task management models — core feature of BaanTask."""
+"""Task management models — core feature of Task Manager."""
 
 from django.core.exceptions import ValidationError
 from django.db import models

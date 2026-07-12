@@ -1,5 +1,5 @@
 [project]
-name = "baantask-backend"
+name = "task-manager-backend"
 version = "0.2.0"
 description = "AI-powered household staff management platform — backend"
 requires-python = ">=3.12"

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 #
-# BaanTask backend — multi-stage build.
+# Task Manager backend — multi-stage build.
 #
 # Stages:
 #   1. base    — pinned python base, common env, no extras

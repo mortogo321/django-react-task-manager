@@ -27,7 +27,7 @@ def translate_task(task_id: int) -> None:
     except Task.DoesNotExist:
         return
 
-    target = "th"  # Workers in BaanTask are Thai.
+    target = "th"  # Workers in Task Manager are Thai.
     source = task.employer.preferred_language or "en"
 
     if target == source:

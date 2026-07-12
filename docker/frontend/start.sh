@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 #
-# BaanTask frontend entrypoint.
+# Task Manager frontend entrypoint.
 #
 # Add init steps here as the app grows (e.g. runtime config injection
 # into the built bundle, nginx vhost templating from env vars, asset

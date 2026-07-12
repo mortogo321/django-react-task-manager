@@ -1,4 +1,4 @@
-# BaanTask — Day 1 Code Review
+# Task Manager — Day 1 Code Review
 
 Issues are grouped by severity. Each entry lists the location, what's wrong, why it matters, and the fix that lands on Day 2.
 

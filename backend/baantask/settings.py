@@ -1,5 +1,5 @@
 """
-Django settings for BaanTask project.
+Django settings for Task Manager project.
 AI-powered household staff management platform.
 
 Production-aware: enabling DEBUG=False enforces a real SECRET_KEY,
@@ -194,7 +194,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "BaanTask API",
+    "TITLE": "Task Manager API",
     "DESCRIPTION": (
         "AI-powered household staff management platform for expats in Thailand. "
         "Auth (dev): pass `X-Employer-Id: <id>` and `X-User-Role: employer|worker`."

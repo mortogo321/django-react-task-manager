@@ -1,8 +1,8 @@
-# BaanTask — Architecture Overview
+# Task Manager — Architecture Overview
 
 ## High-level
 
-BaanTask is a thin three-tier app:
+Task Manager is a thin three-tier app:
 
 ```
 React SPA  ──HTTP──►  Django + DRF  ──►  PostgreSQL

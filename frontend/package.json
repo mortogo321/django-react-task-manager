@@ -1,5 +1,5 @@
 {
-  "name": "baantask-frontend",
+  "name": "task-manager-frontend",
   "version": "0.2.0",
   "private": true,
   "dependencies": {

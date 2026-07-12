@@ -1,5 +1,5 @@
 """
-Claude API wrapper for BaanTask translations.
+Claude API wrapper for Task Manager translations.
 
 Design goals:
 - Pure function interface (`translate(text, target, source=None) -> str`)

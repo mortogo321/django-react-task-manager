@@ -1,14 +1,14 @@
-# BaanTask — Тестовое задание (5 дней) / Test Assignment (5 days) / แบบทดสอบ (5 วัน)
+# Task Manager — Тестовое задание (5 дней) / Test Assignment (5 days) / แบบทดสอบ (5 วัน)
 
 ---
 
 ## О проекте / About the Project / เกี่ยวกับโครงการ
 
-**RU:** BaanTask — AI-платформа для управления домашним персоналом в Таиланде. Приложение помогает экспатам и иностранным резидентам общаться с тайским персоналом (горничные, няни, водители, повара) через AI-перевод в реальном времени и систему управления задачами.
+**RU:** Task Manager — AI-платформа для управления домашним персоналом в Таиланде. Приложение помогает экспатам и иностранным резидентам общаться с тайским персоналом (горничные, няни, водители, повара) через AI-перевод в реальном времени и систему управления задачами.
 
-**EN:** BaanTask is an AI-powered household staff management platform for Thailand. The app helps expats and foreign residents communicate with Thai household staff (maids, nannies, drivers, cooks) through real-time AI translation and a task management system.
+**EN:** Task Manager is an AI-powered household staff management platform for Thailand. The app helps expats and foreign residents communicate with Thai household staff (maids, nannies, drivers, cooks) through real-time AI translation and a task management system.
 
-**TH:** BaanTask คือแพลตฟอร์ม AI สำหรับจัดการพนักงานในบ้านในประเทศไทย แอปช่วยให้ชาวต่างชาติและผู้พำนักอาศัยสื่อสารกับพนักงานในบ้านชาวไทย (แม่บ้าน พี่เลี้ยง คนขับรถ พ่อครัว) ผ่านระบบแปลภาษา AI แบบเรียลไทม์และระบบจัดการงาน
+**TH:** Task Manager คือแพลตฟอร์ม AI สำหรับจัดการพนักงานในบ้านในประเทศไทย แอปช่วยให้ชาวต่างชาติและผู้พำนักอาศัยสื่อสารกับพนักงานในบ้านชาวไทย (แม่บ้าน พี่เลี้ยง คนขับรถ พ่อครัว) ผ่านระบบแปลภาษา AI แบบเรียลไทม์และระบบจัดการงาน
 
 **Стек / Stack:** Python/Django REST Framework (backend), React (web), PostgreSQL, Redis, Docker.
 

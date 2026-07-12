@@ -1,5 +1,5 @@
 """
-Header-based dev authentication for BaanTask.
+Header-based dev authentication for Task Manager.
 
 ⚠️  This is intentionally simple — it trusts request headers and is meant
     only for the candidate-test environment. In production this layer

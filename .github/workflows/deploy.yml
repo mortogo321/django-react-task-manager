@@ -23,11 +23,11 @@ name: CI / CD
 #     REGISTRY_PASSWORD
 #
 #   Variables (Settings → Secrets and variables → Actions → Variables)
-#     ALLOWED_HOSTS               e.g. api.baantask.app
-#     CORS_ALLOWED_ORIGINS        e.g. https://app.baantask.app
-#     BACKEND_IMAGE               e.g. ghcr.io/acme/baantask-backend
-#     FRONTEND_IMAGE              e.g. ghcr.io/acme/baantask-frontend
-#     REACT_APP_API_URL           e.g. https://api.baantask.app/api
+#     ALLOWED_HOSTS               e.g. api.example.com
+#     CORS_ALLOWED_ORIGINS        e.g. https://app.example.com
+#     BACKEND_IMAGE               e.g. ghcr.io/acme/task-manager-backend
+#     FRONTEND_IMAGE              e.g. ghcr.io/acme/task-manager-frontend
+#     REACT_APP_API_URL           e.g. https://api.example.com/api
 
 on:
   push:

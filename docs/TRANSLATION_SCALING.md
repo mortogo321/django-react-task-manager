@@ -1,4 +1,4 @@
-# Scaling the BaanTask Translation Service to 10,000 req/min
+# Scaling the Task Manager Translation Service to 10,000 req/min
 
 10,000 req/min ≈ **167 req/s sustained**, with realistic peaks of
 3–4× during evening household-task hours in Bangkok. The hard
