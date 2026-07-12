@@ -51,6 +51,11 @@ class WorkerSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+        extra_kwargs = {
+            # Never required from the client — `validate()` derives it
+            # from the authenticated caller's own employer record.
+            "employer": {"required": False},
+        }
 
     def validate_salary(self, value):
         if value < 0:

@@ -41,6 +41,11 @@ class TaskSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = ["completed_at", "title_th", "description_th"]
+        extra_kwargs = {
+            # Never required from the client — `validate()` derives it
+            # from the authenticated caller's own employer record.
+            "employer": {"required": False},
+        }
 
     # ---- field-level validation ------------------------------------------
 
