@@ -1,4 +1,4 @@
-# BaanTask
+# Household Staff Task Manager
 
 AI-powered household staff management platform for expats in Thailand.
 Employers can create tasks for their staff (maids, nannies, drivers,
@@ -235,11 +235,11 @@ pipeline. `concurrency` cancels superseded runs on the same branch.
 | Secrets → Actions            | `ANTHROPIC_API_KEY`   | Claude API key                              |
 | Secrets → Actions            | `REGISTRY_USERNAME`   | ghcr login                                  |
 | Secrets → Actions            | `REGISTRY_PASSWORD`   | ghcr token                                  |
-| Variables → Actions          | `ALLOWED_HOSTS`       | e.g. `api.baantask.app`                     |
-| Variables → Actions          | `CORS_ALLOWED_ORIGINS`| e.g. `https://app.baantask.app`             |
-| Variables → Actions          | `BACKEND_IMAGE`       | e.g. `ghcr.io/acme/baantask-backend`        |
-| Variables → Actions          | `FRONTEND_IMAGE`      | e.g. `ghcr.io/acme/baantask-frontend`       |
-| Variables → Actions          | `REACT_APP_API_URL`   | e.g. `https://api.baantask.app/api`         |
+| Variables → Actions          | `ALLOWED_HOSTS`       | e.g. `api.example.com`                      |
+| Variables → Actions          | `CORS_ALLOWED_ORIGINS`| e.g. `https://app.example.com`              |
+| Variables → Actions          | `BACKEND_IMAGE`       | e.g. `ghcr.io/<org>/task-manager-backend`   |
+| Variables → Actions          | `FRONTEND_IMAGE`      | e.g. `ghcr.io/<org>/task-manager-frontend`  |
+| Variables → Actions          | `REACT_APP_API_URL`   | e.g. `https://api.example.com/api`          |
 
 ## Docs
 
