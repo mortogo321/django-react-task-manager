@@ -18,9 +18,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     status_display = serializers.CharField(source="get_status_display", read_only=True)
     priority_display = serializers.CharField(source="get_priority_display", read_only=True)
-    worker_name = serializers.CharField(
-        source="worker.full_name", read_only=True, default=None
-    )
+    worker_name = serializers.CharField(source="worker.full_name", read_only=True, default=None)
 
     class Meta:
         model = Task

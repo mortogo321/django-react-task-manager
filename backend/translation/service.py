@@ -13,12 +13,11 @@ Design goals:
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import functools
 import hashlib
 import logging
 import time
-from dataclasses import dataclass
-from typing import Optional
 
 from django.conf import settings
 from django.core.cache import cache
@@ -45,9 +44,9 @@ MAX_INPUT_CHARS = 8_000
 def translate(
     text: str,
     target: str,
-    source: Optional[str] = None,
+    source: str | None = None,
     *,
-    model: Optional[str] = None,
+    model: str | None = None,
 ) -> TranslationResult:
     """
     Translate `text` to language code `target` (e.g. 'th', 'en').
@@ -87,9 +86,7 @@ def translate(
 
 
 def _cache_key(model: str, source: str, target: str, text: str) -> str:
-    digest = hashlib.sha256(
-        f"{model}|{source}|{target}|{text}".encode("utf-8")
-    ).hexdigest()
+    digest = hashlib.sha256(f"{model}|{source}|{target}|{text}".encode()).hexdigest()
     # `tr:` namespace + first 32 chars is enough entropy and short enough
     # for Redis hot keys.
     return f"tr:{target}:{digest[:32]}"
@@ -124,9 +121,7 @@ _LANGUAGE_NAMES = {
 }
 
 
-def _call_claude(
-    *, text: str, target: str, source: Optional[str], model: str
-) -> str:
+def _call_claude(*, text: str, target: str, source: str | None, model: str) -> str:
     target_name = _LANGUAGE_NAMES.get(target, target)
     source_name = _LANGUAGE_NAMES.get(source or "", "the source language")
     system = (
@@ -137,7 +132,7 @@ def _call_claude(
         "no quotes, no preamble."
     )
 
-    last_exc: Optional[Exception] = None
+    last_exc: Exception | None = None
     for attempt in (1, 2):
         try:
             resp = _client().messages.create(
@@ -147,7 +142,7 @@ def _call_claude(
                 messages=[{"role": "user", "content": text}],
             )
             return _extract_text(resp).strip()
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             last_exc = exc
             cls = exc.__class__.__name__
             retriable = cls in {

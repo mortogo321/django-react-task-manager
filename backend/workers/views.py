@@ -55,9 +55,7 @@ class EmployerViewSet(viewsets.ModelViewSet):
     def dashboard(self, request, pk=None):
         employer = self.get_object()  # IsOwnerEmployer guards this
         active_workers = employer.workers.filter(is_active=True)
-        agg = active_workers.aggregate(
-            total_salary=Sum("salary"), count=Count("id")
-        )
+        agg = active_workers.aggregate(total_salary=Sum("salary"), count=Count("id"))
         return Response(
             {
                 "employer": {
@@ -100,10 +98,7 @@ class WorkerViewSet(viewsets.ModelViewSet):
         emp = getattr(self.request, "current_employer", None)
         if emp is None:
             return Worker.objects.none()
-        return (
-            Worker.objects.select_related("employer")
-            .filter(employer=emp)
-        )
+        return Worker.objects.select_related("employer").filter(employer=emp)
 
     def perform_create(self, serializer):
         employer = self.request.current_employer
@@ -122,9 +117,7 @@ class WorkerViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             locked = Employer.lock_for_update(employer.pk)
             # If the worker is being reactivated, recheck the limit.
-            new_active = serializer.validated_data.get(
-                "is_active", serializer.instance.is_active
-            )
+            new_active = serializer.validated_data.get("is_active", serializer.instance.is_active)
             if new_active and not serializer.instance.is_active:
                 try:
                     locked.assert_can_add_worker(exclude_pk=serializer.instance.pk)

@@ -23,6 +23,9 @@ class NotificationPreference(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"Notification preferences for {self.employer}"
+
     def is_enabled(self, event_type: str) -> bool:
         return bool(getattr(self, f"on_{event_type}", True))
 
@@ -37,9 +40,7 @@ class Notification(models.Model):
         ("task_overdue", "Task overdue"),
     ]
 
-    employer = models.ForeignKey(
-        Employer, on_delete=models.CASCADE, related_name="notifications"
-    )
+    employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name="notifications")
     event = models.CharField(max_length=32, choices=EVENT_CHOICES)
     title = models.CharField(max_length=200)
     body = models.TextField(blank=True)

@@ -10,8 +10,8 @@ rarely and a small staleness window is acceptable.
 
 from __future__ import annotations
 
-import logging
 from functools import lru_cache
+import logging
 
 from .models import Notification, NotificationPreference
 

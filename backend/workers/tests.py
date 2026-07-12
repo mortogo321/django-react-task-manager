@@ -4,7 +4,7 @@ from datetime import date, timedelta
 
 import pytest
 
-from workers.models import Employer, Worker
+from workers.models import Worker
 
 
 @pytest.mark.django_db
@@ -70,9 +70,7 @@ class TestWorkerScoping:
         assert {w["first_name"] for w in own} == {worker.first_name}
         assert {w["first_name"] for w in other} == {"Other"}
 
-    def test_cannot_create_worker_for_another_employer(
-        self, api, other_employer
-    ):
+    def test_cannot_create_worker_for_another_employer(self, api, other_employer):
         resp = api.post(
             "/api/workers/",
             {

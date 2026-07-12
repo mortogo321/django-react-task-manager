@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { workersApi, unwrapList } from '../api/client';
+import { useCallback, useEffect, useState } from 'react';
+import { unwrapList, workersApi } from '../api/client';
 
 const ROLE_BG = {
   maid: '#e3f2fd',
@@ -31,7 +31,9 @@ export default function WorkerList() {
     }
   }, [roleFilter]);
 
-  useEffect(() => { fetchWorkers(); }, [fetchWorkers]);
+  useEffect(() => {
+    fetchWorkers();
+  }, [fetchWorkers]);
 
   return (
     <section>
@@ -81,14 +83,24 @@ export default function WorkerList() {
               style={{ background: ROLE_BG[w.role] || '#f5f5f5' }}
             >
               <div className="worker-card__row">
-                <strong>{w.first_name} {w.last_name}</strong>
+                <strong>
+                  {w.first_name} {w.last_name}
+                </strong>
                 {w.nickname && <em style={{ color: '#666' }}>“{w.nickname}”</em>}
               </div>
               <div className="worker-card__row">
                 <span className="worker-card__role-pill">{w.role_display}</span>
                 <span className="worker-card__salary">฿{Number(w.salary).toLocaleString()}/mo</span>
               </div>
-              <div className="worker-card__row" style={{ fontSize: 12, color: '#555', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: 6 }}>
+              <div
+                className="worker-card__row"
+                style={{
+                  fontSize: 12,
+                  color: '#555',
+                  borderTop: '1px solid rgba(0,0,0,0.06)',
+                  paddingTop: 6,
+                }}
+              >
                 <span>Phone: {w.phone}</span>
                 <span style={{ color: w.is_active ? '#16a34a' : '#dc2626' }}>
                   {w.is_active ? '● Active' : '○ Inactive'}

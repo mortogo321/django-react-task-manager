@@ -50,11 +50,7 @@ class NotificationViewSet(
 
     @action(detail=False, methods=["post"], url_path="mark-all-read")
     def mark_all_read(self, request):
-        updated = (
-            self.get_queryset()
-            .filter(read_at__isnull=True)
-            .update(read_at=timezone.now())
-        )
+        updated = self.get_queryset().filter(read_at__isnull=True).update(read_at=timezone.now())
         return Response({"marked": updated})
 
 
@@ -64,9 +60,7 @@ class NotificationPreferenceView(APIView):
     permission_classes = [IsAuthenticatedEmployer]
 
     def _get_or_create(self, request) -> NotificationPreference:
-        pref, _ = NotificationPreference.objects.get_or_create(
-            employer=request.current_employer
-        )
+        pref, _ = NotificationPreference.objects.get_or_create(employer=request.current_employer)
         return pref
 
     @extend_schema(responses={200: NotificationPreferenceSerializer})
@@ -80,9 +74,7 @@ class NotificationPreferenceView(APIView):
     )
     def patch(self, request):
         pref = self._get_or_create(request)
-        serializer = NotificationPreferenceSerializer(
-            pref, data=request.data, partial=True
-        )
+        serializer = NotificationPreferenceSerializer(pref, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

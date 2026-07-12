@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { notificationsApi, unwrapList } from '../api/client';
 
 const POLL_MS = 30_000;
@@ -33,7 +33,9 @@ export default function NotificationsBell() {
   useEffect(() => {
     refreshUnread();
     const id = setInterval(refreshUnread, POLL_MS);
-    const onVisibility = () => { if (!document.hidden) refreshUnread(); };
+    const onVisibility = () => {
+      if (!document.hidden) refreshUnread();
+    };
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
       clearInterval(id);
@@ -103,6 +105,7 @@ export default function NotificationsBell() {
         🔔 {unread > 0 && <strong style={{ marginLeft: 4 }}>{unread}</strong>}
       </button>
       {open && (
+        // biome-ignore lint/a11y/useSemanticElements: custom anchored popover panel, not a native <dialog>
         <div
           role="dialog"
           aria-label="Notifications"
@@ -121,13 +124,15 @@ export default function NotificationsBell() {
             zIndex: 50,
           }}
         >
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '12px 14px',
-            borderBottom: '1px solid #e5e7eb',
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '12px 14px',
+              borderBottom: '1px solid #e5e7eb',
+            }}
+          >
             <strong>Notifications</strong>
             {unread > 0 && (
               <button

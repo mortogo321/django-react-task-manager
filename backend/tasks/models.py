@@ -6,14 +6,13 @@ from django.utils import timezone
 
 from workers.models import Employer, Worker
 
-
 # Forward-only state machine. `verified` is the terminal state.
 TASK_TRANSITIONS: dict[str, list[str]] = {
-    "created":     ["assigned", "in_progress"],
-    "assigned":    ["in_progress", "created"],
+    "created": ["assigned", "in_progress"],
+    "assigned": ["in_progress", "created"],
     "in_progress": ["completed"],
-    "completed":   ["verified", "in_progress"],
-    "verified":    [],
+    "completed": ["verified", "in_progress"],
+    "verified": [],
 }
 
 
@@ -45,9 +44,7 @@ class Task(models.Model):
         blank=True,
         help_text="Auto-translated Thai title (Day 4)",
     )
-    employer = models.ForeignKey(
-        Employer, on_delete=models.CASCADE, related_name="tasks"
-    )
+    employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name="tasks")
     worker = models.ForeignKey(
         Worker,
         on_delete=models.SET_NULL,
@@ -55,12 +52,8 @@ class Task(models.Model):
         blank=True,
         related_name="tasks",
     )
-    status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default="created"
-    )
-    priority = models.CharField(
-        max_length=10, choices=PRIORITY_CHOICES, default="medium"
-    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="created")
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default="medium")
     due_date = models.DateTimeField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -87,9 +80,7 @@ class Task(models.Model):
         if new_status == self.status:
             return
         if not self.can_transition_to(new_status):
-            raise ValidationError(
-                f"Cannot change status from '{self.status}' to '{new_status}'."
-            )
+            raise ValidationError(f"Cannot change status from '{self.status}' to '{new_status}'.")
         self.status = new_status
         if new_status == "completed" and self.completed_at is None:
             self.completed_at = timezone.now()
@@ -100,11 +91,8 @@ class Task(models.Model):
     def clean(self):
         super().clean()
         if self.worker_id and self.worker.employer_id != self.employer_id:
-            raise ValidationError(
-                {"worker": "Worker does not belong to this employer."}
-            )
-        if self.due_date and self.due_date < timezone.now():
-            # Existing tasks may end up with past due dates over time;
-            # only enforce on first save.
-            if self._state.adding:
-                raise ValidationError({"due_date": "Due date cannot be in the past."})
+            raise ValidationError({"worker": "Worker does not belong to this employer."})
+        # Existing tasks may end up with past due dates over time;
+        # only enforce on first save.
+        if self.due_date and self.due_date < timezone.now() and self._state.adding:
+            raise ValidationError({"due_date": "Due date cannot be in the past."})

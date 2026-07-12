@@ -1,29 +1,29 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { tasksApi, workersApi, unwrapList } from '../api/client';
+import { useCallback, useEffect, useState } from 'react';
+import { tasksApi, unwrapList, workersApi } from '../api/client';
 import TaskForm from './TaskForm';
 
 const STATUS_LABELS = {
-  created:     { label: 'Created',     color: '#6b7280' },
-  assigned:    { label: 'Assigned',    color: '#2563eb' },
+  created: { label: 'Created', color: '#6b7280' },
+  assigned: { label: 'Assigned', color: '#2563eb' },
   in_progress: { label: 'In Progress', color: '#f59e0b' },
-  completed:   { label: 'Completed',   color: '#16a34a' },
-  verified:    { label: 'Verified',    color: '#9333ea' },
+  completed: { label: 'Completed', color: '#16a34a' },
+  verified: { label: 'Verified', color: '#9333ea' },
 };
 
 const PRIORITY_LABELS = {
-  low:    { label: 'Low',    color: '#84cc16' },
+  low: { label: 'Low', color: '#84cc16' },
   medium: { label: 'Medium', color: '#facc15' },
-  high:   { label: 'High',   color: '#f97316' },
+  high: { label: 'High', color: '#f97316' },
   urgent: { label: 'Urgent', color: '#dc2626' },
 };
 
 // Mirrors backend TASK_TRANSITIONS so the UI never offers an illegal move.
 const TRANSITIONS = {
-  created:     ['assigned', 'in_progress'],
-  assigned:    ['in_progress'],
+  created: ['assigned', 'in_progress'],
+  assigned: ['in_progress'],
   in_progress: ['completed'],
-  completed:   ['verified'],
-  verified:    [],
+  completed: ['verified'],
+  verified: [],
 };
 
 export default function TaskList() {
@@ -109,7 +109,9 @@ export default function TaskList() {
           >
             <option value="">All statuses</option>
             {Object.entries(STATUS_LABELS).map(([key, val]) => (
-              <option key={key} value={key}>{val.label}</option>
+              <option key={key} value={key}>
+                {val.label}
+              </option>
             ))}
           </select>
           <button
@@ -139,13 +141,17 @@ export default function TaskList() {
                 className="stats-bar__dot"
                 style={{ backgroundColor: STATUS_LABELS[status]?.color || '#ccc' }}
               />
-              <span>{STATUS_LABELS[status]?.label || status}: <strong>{count}</strong></span>
+              <span>
+                {STATUS_LABELS[status]?.label || status}: <strong>{count}</strong>
+              </span>
             </div>
           ))}
           {typeof stats.overdue === 'number' && (
             <div className="stats-bar__item">
               <span className="stats-bar__dot" style={{ backgroundColor: '#dc2626' }} />
-              <span>Overdue: <strong>{stats.overdue}</strong></span>
+              <span>
+                Overdue: <strong>{stats.overdue}</strong>
+              </span>
             </div>
           )}
         </div>
@@ -172,21 +178,14 @@ export default function TaskList() {
                 <div className="task-card__header">
                   <div>
                     <div className="task-card__title">{task.title}</div>
-                    {task.title_th && (
-                      <div className="task-card__title-th">🇹🇭 {task.title_th}</div>
-                    )}
+                    {task.title_th && <div className="task-card__title-th">🇹🇭 {task.title_th}</div>}
                   </div>
-                  <span
-                    className="badge"
-                    style={{ background: priorityInfo.color, color: '#fff' }}
-                  >
+                  <span className="badge" style={{ background: priorityInfo.color, color: '#fff' }}>
                     {priorityInfo.label}
                   </span>
                 </div>
 
-                {task.description && (
-                  <div className="task-card__desc">{task.description}</div>
-                )}
+                {task.description && <div className="task-card__desc">{task.description}</div>}
                 {task.description_th && (
                   <div className="task-card__desc">🇹🇭 {task.description_th}</div>
                 )}
@@ -199,9 +198,7 @@ export default function TaskList() {
                     {statusInfo.label}
                   </span>
                   {task.worker_name && <span>👤 {task.worker_name}</span>}
-                  {task.due_date && (
-                    <span>📅 {new Date(task.due_date).toLocaleString()}</span>
-                  )}
+                  {task.due_date && <span>📅 {new Date(task.due_date).toLocaleString()}</span>}
                 </div>
 
                 {next.length > 0 && (
@@ -228,11 +225,7 @@ export default function TaskList() {
       )}
 
       {creating && (
-        <TaskForm
-          workers={workers}
-          onClose={() => setCreating(false)}
-          onCreated={onCreated}
-        />
+        <TaskForm workers={workers} onClose={() => setCreating(false)} onCreated={onCreated} />
       )}
     </section>
   );

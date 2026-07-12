@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { employersApi, getEmployerId, tasksApi } from '../api/client';
 
 /**
@@ -30,7 +30,9 @@ export default function Dashboard() {
     }
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   if (loading) {
     return (
@@ -43,7 +45,9 @@ export default function Dashboard() {
     return (
       <div className="alert alert--error" role="alert">
         <span>{error}</span>
-        <button className="button button--ghost" onClick={load}>Retry</button>
+        <button type="button" className="button button--ghost" onClick={load}>
+          Retry
+        </button>
       </div>
     );
   }
@@ -57,11 +61,17 @@ export default function Dashboard() {
     <section>
       <div className="section-header">
         <h2>Dashboard</h2>
-        <button className="button button--ghost" onClick={load}>Refresh</button>
+        <button type="button" className="button button--ghost" onClick={load}>
+          Refresh
+        </button>
       </div>
 
       <div style={kpiGrid}>
-        <KpiCard label="Plan" value={data.employer.plan} sub={`฿${data.billing.plan_price_thb}/mo`} />
+        <KpiCard
+          label="Plan"
+          value={data.employer.plan}
+          sub={`฿${data.billing.plan_price_thb}/mo`}
+        />
         <KpiCard
           label="Workers"
           value={`${data.billing.worker_count} / ${data.billing.worker_limit}`}
@@ -73,7 +83,12 @@ export default function Dashboard() {
           sub="sum of active staff"
         />
         <KpiCard label="Total tasks" value={totalTasks} sub={`${completionRate}% completed`} />
-        <KpiCard label="Overdue" value={stats.overdue || 0} sub="not done past due date" tone={stats.overdue ? 'danger' : 'normal'} />
+        <KpiCard
+          label="Overdue"
+          value={stats.overdue || 0}
+          sub="not done past due date"
+          tone={stats.overdue ? 'danger' : 'normal'}
+        />
       </div>
 
       <div className="card" style={{ marginTop: 16 }}>
@@ -98,13 +113,19 @@ const kpiGrid = {
 function KpiCard({ label, value, sub, tone = 'normal' }) {
   return (
     <div className="card">
-      <div style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', letterSpacing: 0.4 }}>
+      <div
+        style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', letterSpacing: 0.4 }}
+      >
         {label}
       </div>
-      <div style={{
-        fontSize: 26, fontWeight: 700, marginTop: 6,
-        color: tone === 'danger' ? '#dc2626' : '#111827',
-      }}>
+      <div
+        style={{
+          fontSize: 26,
+          fontWeight: 700,
+          marginTop: 6,
+          color: tone === 'danger' ? '#dc2626' : '#111827',
+        }}
+      >
         {value}
       </div>
       {sub && <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>{sub}</div>}
@@ -135,7 +156,15 @@ function BarChart({ data, colors }) {
           <div style={{ width: 110, fontSize: 13, color: '#374151', textTransform: 'capitalize' }}>
             {key.replace('_', ' ')}
           </div>
-          <div style={{ flex: 1, background: '#f3f4f6', borderRadius: 999, overflow: 'hidden', height: 14 }}>
+          <div
+            style={{
+              flex: 1,
+              background: '#f3f4f6',
+              borderRadius: 999,
+              overflow: 'hidden',
+              height: 14,
+            }}
+          >
             <div
               style={{
                 width: `${(count / max) * 100}%`,

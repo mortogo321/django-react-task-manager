@@ -7,14 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": [
-      "build",
-      "dist",
-      "coverage",
-      "node_modules",
-      "public",
-      ".env*"
-    ]
+    "ignore": ["build", "dist", "coverage", "node_modules", "public", ".env*"]
   },
   "organizeImports": {
     "enabled": true

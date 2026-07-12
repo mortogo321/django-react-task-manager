@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { employersApi, getEmployerId, healthApi, setEmployerId, unwrapList } from './api/client';
 import Dashboard from './components/Dashboard';
 import NotificationsBell from './components/NotificationsBell';
 import TaskList from './components/TaskList';
 import WorkerList from './components/WorkerList';
-import { employersApi, getEmployerId, healthApi, setEmployerId, unwrapList } from './api/client';
 
 const TABS = [
   { key: 'dashboard', label: '📊 Dashboard' },
-  { key: 'tasks',     label: '📋 Tasks' },
-  { key: 'workers',   label: '👷 Workers' },
+  { key: 'tasks', label: '📋 Tasks' },
+  { key: 'workers', label: '👷 Workers' },
 ];
 
 export default function App() {
@@ -18,13 +18,15 @@ export default function App() {
   const [currentEmployerId, setCurrentEmployerId] = useState(getEmployerId());
 
   useEffect(() => {
-    healthApi.check()
+    healthApi
+      .check()
       .then((res) => setHealth(res.data))
       .catch(() => setHealth({ status: 'unreachable' }));
   }, []);
 
   useEffect(() => {
-    employersApi.list()
+    employersApi
+      .list()
       .then((res) => {
         const list = unwrapList(res.data).results;
         setEmployers(list);
@@ -67,7 +69,9 @@ export default function App() {
               aria-label="Switch employer"
             >
               {employers.map((e) => (
-                <option key={e.id} value={e.id}>{e.first_name} {e.last_name}</option>
+                <option key={e.id} value={e.id}>
+                  {e.first_name} {e.last_name}
+                </option>
               ))}
             </select>
           )}
@@ -99,9 +103,7 @@ export default function App() {
         {activeTab === 'workers' && <WorkerList />}
       </main>
 
-      <footer className="footer">
-        Task Manager v0.2.0 · Test build
-      </footer>
+      <footer className="footer">Task Manager v0.2.0 · Test build</footer>
     </div>
   );
 }

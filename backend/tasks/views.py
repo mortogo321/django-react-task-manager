@@ -7,8 +7,7 @@ from django.db import transaction
 from django.db.models import Count
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema, inline_serializer
-from rest_framework import serializers as drf_serializers
-from rest_framework import viewsets
+from rest_framework import serializers as drf_serializers, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -36,10 +35,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         emp = getattr(self.request, "current_employer", None)
         if emp is None:
             return Task.objects.none()
-        return (
-            Task.objects.select_related("employer", "worker")
-            .filter(employer=emp)
-        )
+        return Task.objects.select_related("employer", "worker").filter(employer=emp)
 
     # ---- create + post-create side effects -------------------------------
 
@@ -60,7 +56,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     def _safely(fn, task: Task) -> None:
         try:
             fn(task)
-        except Exception:  # noqa: BLE001
+        except Exception:
             log.exception("post-create hook failed for task %s", task.id)
 
     @staticmethod
@@ -104,8 +100,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         ),
         responses={200: TaskSerializer},
         description=(
-            "Move a task to a new status, validating the state machine "
-            f"({TASK_TRANSITIONS})."
+            "Move a task to a new status, validating the state machine " f"({TASK_TRANSITIONS})."
         ),
     )
     @action(detail=True, methods=["post"])
@@ -132,12 +127,8 @@ class TaskViewSet(viewsets.ModelViewSet):
             name="TaskStats",
             fields={
                 "total": drf_serializers.IntegerField(),
-                "by_status": drf_serializers.DictField(
-                    child=drf_serializers.IntegerField()
-                ),
-                "by_priority": drf_serializers.DictField(
-                    child=drf_serializers.IntegerField()
-                ),
+                "by_status": drf_serializers.DictField(child=drf_serializers.IntegerField()),
+                "by_priority": drf_serializers.DictField(child=drf_serializers.IntegerField()),
                 "overdue": drf_serializers.IntegerField(),
             },
         )

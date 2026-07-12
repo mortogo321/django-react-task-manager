@@ -1,9 +1,7 @@
 """Translation service tests — uses a fake Claude client."""
 
-from unittest.mock import patch
-
-import pytest
 from django.core.cache import cache
+import pytest
 
 from translation import service
 

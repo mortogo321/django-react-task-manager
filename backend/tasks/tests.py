@@ -2,11 +2,10 @@
 
 from datetime import timedelta
 
-import pytest
 from django.utils import timezone
+import pytest
 
 from tasks.models import Task
-
 
 # ---- model: state machine -------------------------------------------------
 
@@ -129,16 +128,12 @@ class TestTaskApi:
     def test_patch_status_routes_through_state_machine(self, api, task):
         """PATCH must respect the state machine, not just write the field."""
         # Illegal direct PATCH is rejected.
-        resp = api.patch(
-            f"/api/tasks/{task.id}/", {"status": "verified"}, format="json"
-        )
+        resp = api.patch(f"/api/tasks/{task.id}/", {"status": "verified"}, format="json")
         assert resp.status_code == 400
 
         # Legal PATCH walk also stamps `completed_at`.
         for next_status in ("assigned", "in_progress", "completed"):
-            resp = api.patch(
-                f"/api/tasks/{task.id}/", {"status": next_status}, format="json"
-            )
+            resp = api.patch(f"/api/tasks/{task.id}/", {"status": next_status}, format="json")
             assert resp.status_code == 200
         task.refresh_from_db()
         assert task.status == "completed"

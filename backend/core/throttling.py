@@ -15,8 +15,5 @@ class PerEmployerRateThrottle(SimpleRateThrottle):
 
     def get_cache_key(self, request, view):
         emp = getattr(request, "current_employer", None)
-        if emp is not None:
-            ident = f"emp:{emp.pk}"
-        else:
-            ident = f"ip:{self.get_ident(request)}"
+        ident = f"emp:{emp.pk}" if emp is not None else f"ip:{self.get_ident(request)}"
         return self.cache_format % {"scope": self.scope, "ident": ident}

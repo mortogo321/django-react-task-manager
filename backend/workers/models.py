@@ -2,15 +2,14 @@
 
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
-from django.db import models, transaction
-
+from django.db import models
 
 # Single source of truth for plans (limit + monthly THB price).
 PLANS = {
-    "free":       {"label": "Free",       "worker_limit": 1,   "price_thb": 0},
-    "home":       {"label": "Home",       "worker_limit": 3,   "price_thb": 599},
-    "management": {"label": "Management", "worker_limit": 10,  "price_thb": 1199},
-    "corporate":  {"label": "Corporate",  "worker_limit": 999, "price_thb": 4999},
+    "free": {"label": "Free", "worker_limit": 1, "price_thb": 0},
+    "home": {"label": "Home", "worker_limit": 3, "price_thb": 599},
+    "management": {"label": "Management", "worker_limit": 10, "price_thb": 1199},
+    "corporate": {"label": "Corporate", "worker_limit": 999, "price_thb": 4999},
 }
 
 
@@ -33,9 +32,7 @@ class Employer(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True)
-    preferred_language = models.CharField(
-        max_length=5, choices=LANGUAGE_CHOICES, default="en"
-    )
+    preferred_language = models.CharField(max_length=5, choices=LANGUAGE_CHOICES, default="en")
     plan = models.CharField(max_length=20, choices=PLAN_CHOICES, default="free")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -98,9 +95,7 @@ class Worker(models.Model):
     nickname = models.CharField(max_length=50, blank=True, help_text="Thai nickname")
     phone = models.CharField(max_length=20)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
-    employer = models.ForeignKey(
-        Employer, on_delete=models.CASCADE, related_name="workers"
-    )
+    employer = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name="workers")
     salary = models.DecimalField(
         max_digits=10,
         decimal_places=2,

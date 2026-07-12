@@ -41,9 +41,7 @@ if not SECRET_KEY:
 ALLOWED_HOSTS = _csv("ALLOWED_HOSTS", "localhost,127.0.0.1")
 if not DEBUG and ALLOWED_HOSTS == ["localhost", "127.0.0.1"]:
     # Refuse to run in prod with the default hosts.
-    raise RuntimeError(
-        "ALLOWED_HOSTS must be configured explicitly when DEBUG is False"
-    )
+    raise RuntimeError("ALLOWED_HOSTS must be configured explicitly when DEBUG is False")
 
 
 # ----------------------------------------------------------------------------

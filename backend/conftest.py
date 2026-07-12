@@ -3,7 +3,6 @@
 from datetime import date, timedelta
 
 import pytest
-from django.utils import timezone
 from rest_framework.test import APIClient
 
 from tasks.models import Task

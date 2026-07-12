@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 /**
  * Lightweight modal: traps Esc, returns focus, blocks background scroll.
@@ -20,8 +20,10 @@ export default function Modal({ title, onClose, children, footer }) {
   }, [onClose]);
 
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Escape is already handled globally above; this div is not focusable
     <div
       className="modal-backdrop"
+      // biome-ignore lint/a11y/useSemanticElements: custom backdrop-click-to-close overlay, not a native <dialog>
       role="dialog"
       aria-modal="true"
       aria-label={title}

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import Modal from './Modal';
+import { useState } from 'react';
 import { tasksApi } from '../api/client';
+import Modal from './Modal';
 
 const PRIORITIES = [
   { value: 'low', label: 'Low' },
@@ -68,13 +68,25 @@ export default function TaskForm({ workers = [], onClose, onCreated }) {
   };
 
   return (
-    <Modal title="Create task" onClose={onClose}
+    <Modal
+      title="Create task"
+      onClose={onClose}
       footer={
         <>
-          <button type="button" className="button button--ghost" onClick={onClose} disabled={submitting}>
+          <button
+            type="button"
+            className="button button--ghost"
+            onClick={onClose}
+            disabled={submitting}
+          >
             Cancel
           </button>
-          <button type="submit" form="task-form" className="button button--primary" disabled={submitting}>
+          <button
+            type="submit"
+            form="task-form"
+            className="button button--primary"
+            disabled={submitting}
+          >
             {submitting ? 'Creating…' : 'Create task'}
           </button>
         </>
@@ -91,7 +103,6 @@ export default function TaskForm({ workers = [], onClose, onCreated }) {
             onChange={update('title')}
             maxLength={200}
             required
-            autoFocus
           />
           {errors.title && <div className="field__error">{errors.title}</div>}
         </div>
@@ -115,7 +126,9 @@ export default function TaskForm({ workers = [], onClose, onCreated }) {
             onChange={update('priority')}
           >
             {PRIORITIES.map((p) => (
-              <option key={p.value} value={p.value}>{p.label}</option>
+              <option key={p.value} value={p.value}>
+                {p.label}
+              </option>
             ))}
           </select>
         </div>
@@ -130,7 +143,8 @@ export default function TaskForm({ workers = [], onClose, onCreated }) {
             <option value="">— unassigned —</option>
             {workers.map((w) => (
               <option key={w.id} value={w.id}>
-                {w.first_name} {w.last_name} {w.nickname ? `“${w.nickname}”` : ''} · {w.role_display}
+                {w.first_name} {w.last_name} {w.nickname ? `“${w.nickname}”` : ''} ·{' '}
+                {w.role_display}
               </option>
             ))}
           </select>
