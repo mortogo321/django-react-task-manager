@@ -20,10 +20,9 @@ export default function Modal({ title, onClose, children, footer }) {
   }, [onClose]);
 
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: Escape is already handled globally above; this div is not focusable
+    // biome-ignore lint/a11y/useKeyWithClickEvents: backdrop click is mouse-only progressive enhancement; keyboard users close via Escape (handled globally) and the Close button
     <div
       className="modal-backdrop"
-      // biome-ignore lint/a11y/useSemanticElements: custom backdrop-click-to-close overlay, not a native <dialog>
       role="dialog"
       aria-modal="true"
       aria-label={title}

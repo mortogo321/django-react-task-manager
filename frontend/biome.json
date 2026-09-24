@@ -1,21 +1,27 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": true
+    "useIgnoreFile": false
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": ["build", "dist", "coverage", "node_modules", "public", ".env*"]
+    "includes": [
+      "**",
+      "!**/build",
+      "!**/dist",
+      "!**/coverage",
+      "!**/node_modules",
+      "!**/public",
+      "!**/.env*"
+    ]
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "a11y": {
         "noSvgWithoutTitle": "off"
       },
@@ -72,7 +78,7 @@
   },
   "overrides": [
     {
-      "include": ["**/*.test.js", "**/*.test.jsx"],
+      "includes": ["**/*.test.js", "**/*.test.jsx"],
       "linter": {
         "rules": {
           "suspicious": {

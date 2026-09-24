@@ -2,7 +2,7 @@
 name = "task-manager-backend"
 version = "0.2.0"
 description = "AI-powered household staff management platform — backend"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 
 # ----------------------------------------------------------------------------
 # Ruff — single tool for lint + format + import sort.
@@ -13,7 +13,7 @@ requires-python = ">=3.12"
 # ----------------------------------------------------------------------------
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py313"
 extend-exclude = [
     "migrations",
     "staticfiles",
@@ -42,6 +42,7 @@ ignore = [
     "E501",   # line length is enforced by the formatter, not the linter
     "PLR2004", # magic numbers — too noisy on Django code
     "PLR0913", # too many arguments — Django views legitimately have many
+    "PLC0415", # import-outside-toplevel — lazy imports avoid Django circulars / optional deps
     "S101",   # assert is fine in pytest
     "S105",   # hardcoded password strings — false positives in dev defaults
     "S106",   # hardcoded password func args — same reason

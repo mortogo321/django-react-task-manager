@@ -134,7 +134,7 @@ export default function TaskList() {
       )}
 
       {stats && (
-        <div className="stats-bar" aria-label="Task stats">
+        <section className="stats-bar" aria-label="Task stats">
           {Object.entries(stats.by_status || {}).map(([status, count]) => (
             <div key={status} className="stats-bar__item">
               <span
@@ -154,7 +154,7 @@ export default function TaskList() {
               </span>
             </div>
           )}
-        </div>
+        </section>
       )}
 
       {loading ? (

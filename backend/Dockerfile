@@ -17,7 +17,7 @@
 # ----------------------------------------------------------------------------
 # 1. base — shared by builder and runtime
 # ----------------------------------------------------------------------------
-FROM python:3.12-slim-bookworm AS base
+FROM python:3.13-slim-bookworm AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \

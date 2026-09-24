@@ -24,7 +24,7 @@
 # ----------------------------------------------------------------------------
 # 1. deps — install node_modules once, cached by package.json hash
 # ----------------------------------------------------------------------------
-FROM oven/bun:1.1-alpine AS deps
+FROM oven/bun:1.4.2-alpine AS deps
 
 WORKDIR /app
 
@@ -77,9 +77,13 @@ ENV APP_ENV=${APP_ENV}
 RUN cp .env.${APP_ENV} .env
 
 ARG REACT_APP_API_URL
+# Biome (not CRA's bundled ESLint) owns lint — enforced in CI quality gate.
+# CRA 5's eslint-webpack-plugin fails to resolve its rules under the modern
+# Bun/Node toolchain, so it is disabled for the production build.
 ENV REACT_APP_API_URL=${REACT_APP_API_URL:-} \
     GENERATE_SOURCEMAP=false \
-    INLINE_RUNTIME_CHUNK=false
+    INLINE_RUNTIME_CHUNK=false \
+    DISABLE_ESLINT_PLUGIN=true
 
 RUN bun run build
 
@@ -87,7 +91,7 @@ RUN bun run build
 # ----------------------------------------------------------------------------
 # 4. runtime — nginx serving the bundle (production)
 # ----------------------------------------------------------------------------
-FROM nginx:1.27-alpine AS runtime
+FROM nginx:1.29-alpine AS runtime
 
 # Replace the default vhost with the SPA + /api proxy config from
 # the `nginx` named context (./docker/nginx).

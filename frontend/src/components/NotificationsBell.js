@@ -105,7 +105,6 @@ export default function NotificationsBell() {
         🔔 {unread > 0 && <strong style={{ marginLeft: 4 }}>{unread}</strong>}
       </button>
       {open && (
-        // biome-ignore lint/a11y/useSemanticElements: custom anchored popover panel, not a native <dialog>
         <div
           role="dialog"
           aria-label="Notifications"

@@ -100,7 +100,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         ),
         responses={200: TaskSerializer},
         description=(
-            "Move a task to a new status, validating the state machine " f"({TASK_TRANSITIONS})."
+            f"Move a task to a new status, validating the state machine ({TASK_TRANSITIONS})."
         ),
     )
     @action(detail=True, methods=["post"])

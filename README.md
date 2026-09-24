@@ -1,5 +1,8 @@
 # Household Staff Task Manager
 
+[![CI / CD](https://github.com/mortogo321/django-react-task-manager/actions/workflows/deploy.yml/badge.svg)](https://github.com/mortogo321/django-react-task-manager/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 AI-powered household staff management platform for expats in Thailand.
 Employers can create tasks for their staff (maids, nannies, drivers,
 cooks), auto-translate them to Thai via Claude, and track them through
@@ -7,12 +10,12 @@ a state machine.
 
 ## Stack
 
-- **Backend** — Django 5 + DRF, drf-spectacular, anthropic, Ruff
-- **Frontend** — React 18 (CRA), Bun, Biome
-- **Database** — PostgreSQL 16
-- **Cache** — Redis 7
-- **Runtime** — Multi-stage Docker, gunicorn (tini), nginx
-- **CI/CD** — GitHub Actions: `quality → test → build → deploy`
+- **Backend** — Django 5.2 (LTS) + DRF, drf-spectacular, anthropic, Ruff
+- **Frontend** — React 18 (CRA), Bun 1.4, Biome 2
+- **Database** — PostgreSQL 17
+- **Cache** — Redis 8
+- **Runtime** — Multi-stage Docker (Python 3.13 slim, nginx 1.29), gunicorn (tini), nginx
+- **CI/CD** — GitHub Actions: `quality → test → build` (+ disabled `deploy`: no target); Dependabot weekly
 
 ## Quick start (dev)
 
@@ -91,7 +94,7 @@ Both Dockerfiles are multi-stage with named stages so each compose
 file picks the right one via `target:`.
 
 **Backend** (`backend/Dockerfile`):
-- `base` — pinned `python:3.12-slim-bookworm`, common env vars
+- `base` — pinned `python:3.13-slim-bookworm`, common env vars
 - `builder` — installs build toolchain (`gcc`, `libpq-dev`) and Python
   wheels into a relocatable venv with a BuildKit pip cache mount
 - `runtime` — minimal image: copies the venv + app, installs only
@@ -101,10 +104,10 @@ file picks the right one via `target:`.
 - `dev` — `runtime` + `postgresql-client` for `manage.py dbshell`
 
 **Frontend** (`frontend/Dockerfile`):
-- `deps` — `oven/bun:1.1-alpine` + `bun install` with cache mount
+- `deps` — `oven/bun:1.4.2-alpine` + `bun install` with cache mount
 - `dev` — copies source, runs `bun run start` for the CRA dev server
 - `build` — `bun run build`, no source maps, hashed bundle
-- `runtime` — `nginx:1.27-alpine`, serves the built bundle from
+- `runtime` — `nginx:1.29-alpine`, serves the built bundle from
   `/usr/share/nginx/html`, listens on :8080 as the `nginx` user
 
 Auxiliary files under `docker/` are exposed to each build via Compose
@@ -211,20 +214,22 @@ GitHub Actions pipeline (`.github/workflows/deploy.yml`):
 
 ```
 quality-backend ──┐
-                  ├──► test ──► build ──► deploy
+                  ├──► test ──► build ──► (deploy: disabled, no target)
 quality-frontend ─┘
 ```
 
 - **quality** — Ruff (backend) + Biome (frontend) in parallel.
 - **test** — pytest with Postgres + Redis service containers.
-- **build** — multi-stage Docker images, pushed to ghcr with `:sha`
-  and `:latest` tags. `APP_ENV=prod` baked in via build arg.
-  Pull-through GHA cache scoped per image.
-- **deploy** — `docker compose up -d` against the production host with
+- **build** — verifies both multi-stage Docker images build
+  (`APP_ENV=prod` baked in via build arg, GHA cache scoped per image).
+  No registry push: no deployment target is configured yet — wire
+  `BACKEND_IMAGE` / `FRONTEND_IMAGE` + registry secrets to re-enable push.
+- **deploy** — disabled (no production host). The commented template in
+  `deploy.yml` shows the intended `docker compose up -d` deploy with
   secrets and vars sourced from the GitHub environment.
 
-PR builds run quality + test only. Push to `main` runs the full
-pipeline. `concurrency` cancels superseded runs on the same branch.
+PR builds run quality + test + build. `concurrency` cancels superseded
+runs on the same branch.
 
 ### Required CI configuration
 

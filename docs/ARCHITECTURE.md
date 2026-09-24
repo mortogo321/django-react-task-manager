@@ -14,8 +14,8 @@ Everything runs in `docker compose`:
 
 | Service   | Image / Build       | Port  | Role                                  |
 |-----------|---------------------|-------|---------------------------------------|
-| `db`      | `postgres:16-alpine`| 5432  | Primary datastore                     |
-| `redis`   | `redis:7-alpine`    | 6379  | Cache backend (Django cache + future translation cache) |
+| `db`      | `postgres:17-alpine`| 5432  | Primary datastore                     |
+| `redis`   | `redis:8-alpine`    | 6379  | Cache backend (Django cache + future translation cache) |
 | `backend` | `./backend`         | 8000  | Django 5 + DRF API                    |
 | `frontend`| `./frontend`        | 3000  | React 18 dev server (CRA)             |
 
